@@ -1,11 +1,13 @@
 ﻿@page "/counter"
+@inherits CounterModel
 
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
-
+<button class="btn btn-primary" @onclick="@Run">Click me 222</button>
+<textarea rows="2" cols="100">@Output</textarea>
 @code {
     int currentCount = 0;
 
