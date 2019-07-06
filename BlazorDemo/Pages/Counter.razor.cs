@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using MerryYellow.PatternMaker;
+//using MerryYellow.PatternMaker;
 
 namespace BlazorDemo.Pages
 {
@@ -17,9 +17,38 @@ namespace BlazorDemo.Pages
         {
             Output += "Y";
 
-            var patterns = Maker.GetPatternList();
+            //var patterns = Maker.GetPatternList();
+            //Output += string.Concat(patterns);
 
-            Output += string.Concat(patterns);
+            var source = 
+@"
+using System;
+ 
+public class MyClass
+{
+    public static void Main()
+    {
+    }
+}
+";
+
+            Output += "<";
+
+
+            try
+            {
+
+            var classList = MerryYellow.RoslynWeb.Compiler.GetClassList(source);
+            Output += string.Concat(classList);
+            }
+            catch(Exception e)
+            {
+                Output += e.ToString();
+            }
+
+            Output += ">";
+
+            //Maker.
 
             StateHasChanged();
         }

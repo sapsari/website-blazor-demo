@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29021.104
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorDemo", "BlazorDemo\BlazorDemo.csproj", "{F4026CC6-37FD-44C0-B62C-4945DC03F522}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorDemo", "BlazorDemo\BlazorDemo.csproj", "{F4026CC6-37FD-44C0-B62C-4945DC03F522}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynWeb", "RoslynWeb\RoslynWeb.csproj", "{453A286F-2BD5-404D-92B6-77E6CD890EF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynWebExecutable", "RoslynWebExecutable\RoslynWebExecutable.csproj", "{62C1AB33-248A-4169-849C-FAE9D9EDBE43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{F4026CC6-37FD-44C0-B62C-4945DC03F522}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4026CC6-37FD-44C0-B62C-4945DC03F522}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4026CC6-37FD-44C0-B62C-4945DC03F522}.Release|Any CPU.Build.0 = Release|Any CPU
+		{453A286F-2BD5-404D-92B6-77E6CD890EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453A286F-2BD5-404D-92B6-77E6CD890EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453A286F-2BD5-404D-92B6-77E6CD890EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453A286F-2BD5-404D-92B6-77E6CD890EF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C1AB33-248A-4169-849C-FAE9D9EDBE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C1AB33-248A-4169-849C-FAE9D9EDBE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C1AB33-248A-4169-849C-FAE9D9EDBE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C1AB33-248A-4169-849C-FAE9D9EDBE43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

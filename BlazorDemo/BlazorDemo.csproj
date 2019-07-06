@@ -11,12 +11,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.0.0-preview6.19307.2" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview6.19307.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0.0-preview6.19307.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.1.0" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="1.1.14" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PatternMaker">
-      <HintPath>..\..\..\Pattern Maker\Source\Maker\bin\Release\netstandard2.0\PatternMaker.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\RoslynWeb\RoslynWeb.csproj" />
   </ItemGroup>
 
 </Project>

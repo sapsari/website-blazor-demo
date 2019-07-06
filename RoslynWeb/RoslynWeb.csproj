@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>MerryYellow.RoslynWeb</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PatternMaker">
+      <HintPath>..\..\..\Pattern Maker\Source\Maker\bin\Release\netstandard2.0\PatternMaker.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
