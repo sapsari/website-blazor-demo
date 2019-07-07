@@ -1,18 +1,44 @@
 ﻿@page "/counter"
 @inherits CounterModel
+@inject IJSRuntime JsRuntime;
 
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
+<p>Current JS: @jsString</p>
 
 <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
+<button class="btn btn-primary" @onclick="@ConvertArray">Click me 333</button>
 <textarea rows="2" cols="100">@Output</textarea>
-@code {
-    int currentCount = 0;
 
-    void IncrementCount()
+<div id="monaco_container" style="width:800px;height:200px;border:1px solid grey"></div>
+
+
+@code {
+int currentCount = 0;
+string jsString = "JS";
+
+void IncrementCount()
+{
+    currentCount++;
+}
+
+private async void ConvertArray()
+{
+    string t = "yo";
+    try
     {
-        currentCount++;
+        t = await JsRuntime.InvokeAsync<string>("ConvertArray", "yo");
     }
+    catch(Exception e)
+    {
+        t = e.ToString();
+    }
+
+    jsString = t;
+    //ConvertedText = new MarkupString(text);
+
+    StateHasChanged();
+}
 }
