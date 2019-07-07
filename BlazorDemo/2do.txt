@@ -1,0 +1,7 @@
+﻿drag&drop
+
+tabs for multiple files
+
+status bar
+
+align loading logo to center

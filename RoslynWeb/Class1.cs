@@ -101,6 +101,11 @@ namespace MerryYellow.RoslynWeb
             }
         }
 
+        public static IEnumerable<string> GetPatternList()
+        {
+            return PatternMaker.Maker.GetPatternList();
+        }
+
         public static IEnumerable<string> GetClassList(string source)
         {
             var ws = CreateWorkspace();
@@ -110,9 +115,16 @@ namespace MerryYellow.RoslynWeb
             //yield break;
         }
 
-        class ASDSA : CSharpSyntaxWalker
+        public static string ApplyPattern(string source, string patternName, string className)
         {
-            
+            var ws = CreateWorkspace();
+            var doc = ws.AddDocument(ws.CurrentSolution.Projects.First().Id, "myfile.cs", SourceText.From(source));
+
+            var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, null);
+            var newDoc = newSol.Projects.First().Documents.First();
+
+            var newText = newDoc.GetTextAsync().Result;
+            return newText.ToString();
         }
 
 

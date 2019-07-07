@@ -7,12 +7,20 @@
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="css/spinkit.css" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/min/vs/editor/editor.main.css">
 </head>
 <body>
-    <app>Loading...</app>
+    <app>
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+        </div>
+    </app>
 
     <script src="_framework/blazor.webassembly.js"></script>
 
@@ -21,33 +29,33 @@
     <script src="monaco-editor/min/vs/editor/editor.main.nls.js"></script>
     <script src="monaco-editor/min/vs/editor/editor.main.js"></script>
 
-    <script>
-        var editor = monaco.editor.create(document.getElementById('monaco_container'), {
-            value: [
-                'function x() {',
-                '\tconsole.log("Hello world!");',
-                '}'
-            ].join('\n'),
-            language: 'javascript'
-        });
-    </script>
 
     <script>
-        window.ConvertArray = (win1251Array) => {
-            /*var win1251decoder = new TextDecoder('windows-1251');
-            var bytes = new Uint8Array(win1251Array);
-            var decodedArray = win1251decoder.decode(bytes);
-            console.log(decodedArray);
-            return decodedArray;*/
-            var editor = monaco.editor.create(document.getElementById('monaco_container'), {
-                value: [
-                    'function x() {',
-                    '\tconsole.log("Hello world!");',
-                    '}'
-                ].join('\n'),
-                language: 'javascript'
+        window.CreateMonacoEditor = (instance, source) => {
+            var text1 = source;
+            var text2 = source;
+            var originalModel = monaco.editor.createModel(text1, "csharp");
+            var modifiedModel = monaco.editor.createModel(text2, "csharp");
+
+            var diffEditor = monaco.editor.createDiffEditor(document.getElementById("monaco_container"), {
+                // You can optionally disable the resizing
+                enableSplitViewResizing: false,
+                originalEditable: true
             });
-            return win1251Array + win1251Array;
+            diffEditor.setModel({
+                original: originalModel,
+                modified: modifiedModel
+            });
+            diffEditor.getModifiedEditor().updateOptions({readOnly:true}); // make right-hand-side readonly
+
+            var originalEditor = diffEditor.getOriginalEditor();
+            originalEditor.onDidChangeModelContent(function (e) {
+                //var person = prompt("Please enter your name", "Harry Potter");
+                //dotnet.invokeMethodAsync('OnContentChanged', e.value);
+                instance.invokeMethodAsync('OnContentChanged');
+            });
+
+            return "created";
         };
     </script>
 

@@ -1,6 +1,7 @@
 ﻿@page "/counter"
-@inherits CounterModel
+@inherits MerryYellow.BlazorDemo.Pages.CounterModel
 @inject IJSRuntime JsRuntime;
+@inject HttpClient Http
 
 <h1>Counter</h1>
 
@@ -10,9 +11,11 @@
 <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
 <button class="btn btn-primary" @onclick="@ConvertArray">Click me 333</button>
+<button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
+
 <textarea rows="2" cols="100">@Output</textarea>
 
-<div id="monaco_container" style="width:800px;height:200px;border:1px solid grey"></div>
+<div id="monaco_container" style="width:100%;height:600px;border:1px solid grey"></div>
 
 
 @code {
@@ -24,14 +27,73 @@ void IncrementCount()
     currentCount++;
 }
 
+[JSInvokable]
+public Task<string> OnContentChanged()
+{
+    IncrementCount();
+
+    //var message = "Hello from a C# instance";
+    //return Task.FromResult(message);
+    jsString += "OCC";
+
+    StateHasChanged();
+
+    return Task.FromResult("occ");
+}
+
+bool isInitialized;
+protected override async Task OnAfterRenderAsync()
+{
+    base.OnAfterRenderAsync();
+
+    if (isInitialized)
+        return;
+    isInitialized = true;
+
+    var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
+    //string text = "yo";
+    try
+    {
+        text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+    }
+    catch (Exception e)
+    {
+        text = e.ToString();
+    }
+
+    jsString = text;
+    //ConvertedText = new MarkupString(text);
+
+    //StateHasChanged();
+}
+
+async void CallJSMethod(string name, string argument, bool updateState = true)
+{
+    string t = "yo";
+    try
+    {
+        t = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", "yo");
+    }
+    catch (Exception e)
+    {
+        t = e.ToString();
+    }
+
+    jsString = t;
+    //ConvertedText = new MarkupString(text);
+
+    if (updateState)
+        StateHasChanged();
+}
+
 private async void ConvertArray()
 {
     string t = "yo";
     try
     {
-        t = await JsRuntime.InvokeAsync<string>("ConvertArray", "yo");
+        t = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", "yo");
     }
-    catch(Exception e)
+    catch (Exception e)
     {
         t = e.ToString();
     }

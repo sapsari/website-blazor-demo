@@ -5,13 +5,18 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-//using MerryYellow.PatternMaker;
 
-namespace BlazorDemo.Pages
+namespace MerryYellow.BlazorDemo.Pages
 {
+
     public class CounterModel : ComponentBase
     {
         public string Output = "HELELOY";
+
+        public async void ApplyPatternAsync()
+        {
+
+        }
 
         public void Run()
         {
@@ -53,6 +58,10 @@ public class MyClass
             StateHasChanged();
         }
 
+        [Microsoft.JSInterop.JSInvokable]
+        public static void JSCallback()
+        {
+        }
 
     }
 }

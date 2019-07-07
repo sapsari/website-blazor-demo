@@ -10,6 +10,11 @@ app {
     flex-direction: column;
 }
 
+.sk-cube-grid .sk-cube .sk-folding-cube {
+    background-color: white;
+}
+
+
 .top-row {
     height: 3.5rem;
     display: flex;

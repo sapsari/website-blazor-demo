@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorDemo
+namespace MerryYellow.BlazorDemo
 {
     public class Startup
     {
