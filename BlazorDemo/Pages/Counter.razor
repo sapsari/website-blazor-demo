@@ -2,18 +2,34 @@
 @inherits MerryYellow.BlazorDemo.Pages.CounterModel
 @inject IJSRuntime JsRuntime;
 @inject HttpClient Http
-
+<!--
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
 <p>Current JS: @jsString</p>
-
+    -->
+<p>Status: @StatusText</p>
+<!--
 <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
-<button class="btn btn-primary" @onclick="@ConvertArray">Click me 333</button>
+    -->
+
+<select @bind="@SelectedPattern">
+    @foreach (var p in this.GetPatternList())
+    {
+        <option value="@p">@p</option>
+    }
+</select>
+
+<select @bind="@SelectedClass">
+    @foreach (var c in this.GetClassList())
+    {
+        <option value="@c">@c</option>
+    }
+</select>
+
 <button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
 
-<textarea rows="2" cols="100">@Output</textarea>
 
 <div id="monaco_container" style="width:100%;height:600px;border:1px solid grey"></div>
 
@@ -22,23 +38,48 @@
 int currentCount = 0;
 string jsString = "JS";
 
+string SelectedClass222 { get; set; } = "init";
+
 void IncrementCount()
 {
     currentCount++;
 }
 
+public async Task<string> GetSourceAsync()
+{
+    try
+    {
+        return await JsRuntime.InvokeAsync<string>("GetMonacoEditorContent");
+    }
+    catch (Exception e)
+    {
+        //text = e.ToString();//**-
+        return string.Empty;
+    }
+}
+
 [JSInvokable]
-public Task<string> OnContentChanged()
+public async Task<string> OnContentChanged()
 {
     IncrementCount();
 
     //var message = "Hello from a C# instance";
     //return Task.FromResult(message);
     jsString += "OCC";
+    jsString += SelectedClass222;
+    StatusText += "<" + SelectedClass222 + ">";
 
-    StateHasChanged();
+    var source = await GetSourceAsync();
+    //jsString += source;
 
-    return Task.FromResult("occ");
+    this.Source = source;
+
+    //**--StateHasChanged();
+
+    this.OnSourceChangedAsync();
+
+    //return Task.FromResult("occ");
+    return "occ";
 }
 
 bool isInitialized;
@@ -48,7 +89,6 @@ protected override async Task OnAfterRenderAsync()
 
     if (isInitialized)
         return;
-    isInitialized = true;
 
     var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
     //string text = "yo";
@@ -64,43 +104,13 @@ protected override async Task OnAfterRenderAsync()
     jsString = text;
     //ConvertedText = new MarkupString(text);
 
+    //this.GetPatternList();
+
+    this.getSource = () => GetSourceAsync().Result;
+    isInitialized = true;
+
+    await OnContentChanged();
+
     //StateHasChanged();
-}
-
-async void CallJSMethod(string name, string argument, bool updateState = true)
-{
-    string t = "yo";
-    try
-    {
-        t = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", "yo");
-    }
-    catch (Exception e)
-    {
-        t = e.ToString();
-    }
-
-    jsString = t;
-    //ConvertedText = new MarkupString(text);
-
-    if (updateState)
-        StateHasChanged();
-}
-
-private async void ConvertArray()
-{
-    string t = "yo";
-    try
-    {
-        t = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", "yo");
-    }
-    catch (Exception e)
-    {
-        t = e.ToString();
-    }
-
-    jsString = t;
-    //ConvertedText = new MarkupString(text);
-
-    StateHasChanged();
 }
 }

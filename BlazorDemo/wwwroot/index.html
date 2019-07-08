@@ -55,8 +55,14 @@
                 instance.invokeMethodAsync('OnContentChanged');
             });
 
+            window.monacoEditor = diffEditor;
+
             return "created";
         };
+
+        window.GetMonacoEditorContent = () => {
+            return window.monacoEditor.getOriginalEditor().getValue();
+        }
     </script>
 
 </body>
