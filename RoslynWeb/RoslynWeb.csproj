@@ -10,9 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PatternMaker">
-      <HintPath>..\..\..\Pattern Maker\Source\Maker\bin\Release\netstandard2.0\PatternMaker.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\Pattern Maker\Source\Maker\Maker.csproj" />
   </ItemGroup>
 
 </Project>

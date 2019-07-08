@@ -13,34 +13,67 @@ namespace MerryYellow.BlazorDemo.Pages
 
     public class CounterModel : ComponentBase
     {
-        public string StatusText = "All ready";
+        [Inject]
+        protected Microsoft.JSInterop.IJSRuntime JsRuntime { get; set; }
+
+        [Inject]
+        protected HttpClient Http { get; set; }
+
+        public bool IsInitialized;
+
+        public string StatusText = "Initializing...";
+        public string DebugText = "DebugLine";
         //public string StatusType = ""
 
-        public string Output = "HELELOY";
+        string _selectedPattern, _selectedClass;
+        public string SelectedPattern
+        {
+            get => _selectedPattern;
+            set
+            {
+                if (_selectedPattern != value)
+                {
+                    _selectedPattern = value;
+                    if (IsInitialized) ApplyPatternAsync(); // do NOT await
+                }
+            }
+        }
+        public string SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                if (_selectedClass != value)
+                {
+                    _selectedClass = value;
+                    if (IsInitialized) ApplyPatternAsync(); // do NOT await
+                }
+            }
+        }
+
+        bool internalSet;
+
+        List<string> _patternList;
+        public List<string> _classList = new List<string>();
 
         public string Source;
-        public string SelectedPattern;
-        public string SelectedClass;
 
-        public List<string> patternList;
-        public List<string> classList;
-
-        public Func<string> getSource;
+        
 
         public IEnumerable<string> GetPatternList()
         {
             try
             {
-                if (patternList != null)
-                    return patternList;
-                patternList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetPatternList());
-                this.SelectedPattern = patternList.ElementAtOrDefault(0);
-                return patternList;
+                if (_patternList != null)
+                    return _patternList;
+                _patternList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetPatternList());
+                this.SelectedPattern = _patternList.ElementAtOrDefault(0);
+                return _patternList;
             }
             catch(Exception e)
             {
                 StatusText = e.ToString();
-                patternList = null;
+                _patternList = null;
                 return new List<string>();
             }
         }
@@ -49,22 +82,34 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             try
             {
+                /*if (!IsInitialized)
+                    return new List<string>();
+                if (_classList != null)
+                    return _classList;*/
+
                 //var source = this.getSource?.Invoke();
                 //var source = "";
+                //var source = this.JS_GetSourceAsync().GetAwaiter().GetResult();
                 var source = Source;
 
                 if (string.IsNullOrEmpty(source))
-                    classList = new List<string>();
+                    _classList = new List<string>();
                 else
-                    classList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetClassList(source));
+                    _classList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetClassList(source));
 
-                SelectedClass = classList.ElementAtOrDefault(0);
-                return classList;
+                //DebugText = $"_classList.Count:{_classList.Count} from source {source}";
+
+                if (!string.IsNullOrEmpty(_selectedClass) && _classList.Contains(_selectedClass))
+                    ;//no-op
+                else
+                    _selectedClass = _classList.ElementAtOrDefault(0);
+
+                return _classList;
             }
             catch (Exception e)
             {
                 StatusText = e.ToString();
-                classList = null;
+                _classList = null;
                 return new List<string>();
             }
 
@@ -80,21 +125,32 @@ namespace MerryYellow.BlazorDemo.Pages
             await Task.Delay(3000);
 
             if (guid == lastSourceUpdateGuid)
+            {
+                this.Source = await JS_GetSourceAsync();
+                //this._classList = null;
+                GetClassList();
                 await ApplyPatternAsync();
+            }
         }
+
+        static int counter = 1;
 
         public async Task ApplyPatternAsync()
         {
             //MerryYellow.RoslynWeb.Compiler.ApplyPattern()
-            StatusText += "PATTERN APPLIED";
+            //StatusText += "PATTERN APPLIED";
             //StatusText += "{" + SelectedPattern + "," + SelectedClass + "}";
+
+            //var source = await this.JS_GetSourceAsync();
+            var source = Source;
+            var modifiedSource = string.Empty;
+
+            StatusText = $"Pattern {SelectedPattern} applied over class {SelectedClass} {counter++} {_classList?.Count}";
 
             try
             {
-                MerryYellow.RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
-                var newSource = Source;
-                if (!string.IsNullOrEmpty(Source) && !string.IsNullOrEmpty(SelectedPattern) && !string.IsNullOrEmpty(SelectedClass))
-                    newSource = MerryYellow.RoslynWeb.Compiler.ApplyPattern(Source, SelectedPattern, SelectedClass);
+                if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(SelectedPattern) && !string.IsNullOrEmpty(SelectedClass))
+                    modifiedSource = MerryYellow.RoslynWeb.Compiler.ApplyPattern(source, SelectedPattern, SelectedClass);
             }
             catch (Exception e)
             {
@@ -102,18 +158,43 @@ namespace MerryYellow.BlazorDemo.Pages
             }
 
 
+            await JS_SetSourceAsync(modifiedSource);
+
             StateHasChanged();
 
             //return Task.FromResult()
         }
 
-        private void Compiler_OnLogged(int level, string message)
+        static int counterSource = 1;
+        public async Task<string> JS_GetSourceAsync()
         {
-            //throw new NotImplementedException();
-            StatusText += message;
-            StateHasChanged();
+            try
+            {
+                var source = await JsRuntime.InvokeAsync<string>("GetMonacoEditorContent");
+                //DebugText = $"{counterSource++} Source:{source}";
+                return source;
+            }
+            catch (Exception e)
+            {
+                //text = e.ToString();//**-
+                return string.Empty;
+            }
         }
 
+        public async Task<string> JS_SetSourceAsync(string modifiedSource)
+        {
+            try
+            {
+                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorContent", modifiedSource);
+            }
+            catch (Exception e)
+            {
+                //text = e.ToString();//**-
+                return string.Empty;
+            }
+        }
+
+        /*
         public void Run()
         {
             Output += "Y";
@@ -153,7 +234,7 @@ public class MyClass
 
             StateHasChanged();
         }
-
+        */
 
     }
 }

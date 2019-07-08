@@ -1,19 +1,21 @@
 ﻿@page "/counter"
 @inherits MerryYellow.BlazorDemo.Pages.CounterModel
+<!--
 @inject IJSRuntime JsRuntime;
 @inject HttpClient Http
+    -->
 <!--
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
 <p>Current JS: @jsString</p>
     -->
+<p>Debug: @DebugText</p>
 <p>Status: @StatusText</p>
 <!--
 <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
     -->
-
 <select @bind="@SelectedPattern">
     @foreach (var p in this.GetPatternList())
     {
@@ -22,7 +24,7 @@
 </select>
 
 <select @bind="@SelectedClass">
-    @foreach (var c in this.GetClassList())
+    @foreach (var c in _classList)
     {
         <option value="@c">@c</option>
     }
@@ -35,59 +37,13 @@
 
 
 @code {
-int currentCount = 0;
-string jsString = "JS";
 
-string SelectedClass222 { get; set; } = "init";
 
-void IncrementCount()
-{
-    currentCount++;
-}
-
-public async Task<string> GetSourceAsync()
-{
-    try
-    {
-        return await JsRuntime.InvokeAsync<string>("GetMonacoEditorContent");
-    }
-    catch (Exception e)
-    {
-        //text = e.ToString();//**-
-        return string.Empty;
-    }
-}
-
-[JSInvokable]
-public async Task<string> OnContentChanged()
-{
-    IncrementCount();
-
-    //var message = "Hello from a C# instance";
-    //return Task.FromResult(message);
-    jsString += "OCC";
-    jsString += SelectedClass222;
-    StatusText += "<" + SelectedClass222 + ">";
-
-    var source = await GetSourceAsync();
-    //jsString += source;
-
-    this.Source = source;
-
-    //**--StateHasChanged();
-
-    this.OnSourceChangedAsync();
-
-    //return Task.FromResult("occ");
-    return "occ";
-}
-
-bool isInitialized;
 protected override async Task OnAfterRenderAsync()
 {
-    base.OnAfterRenderAsync();
+    await base.OnAfterRenderAsync();
 
-    if (isInitialized)
+    if (IsInitialized)
         return;
 
     var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
@@ -98,19 +54,37 @@ protected override async Task OnAfterRenderAsync()
     }
     catch (Exception e)
     {
-        text = e.ToString();
+        StatusText = e.ToString();
+        text = null;
     }
 
-    jsString = text;
-    //ConvertedText = new MarkupString(text);
 
-    //this.GetPatternList();
+    this.Source = await JS_GetSourceAsync();
+    StatusText += "...";
+    StateHasChanged();
 
-    this.getSource = () => GetSourceAsync().Result;
-    isInitialized = true;
+    GetClassList();
+    IsInitialized = true;
 
-    await OnContentChanged();
+    StatusText = "Ready!";
+    await ApplyPatternAsync();
 
     //StateHasChanged();
+
+
+
+    //await OnContentChanged(); tc
+
+    //StateHasChanged();
+}
+
+[JSInvokable]
+public async Task<string> JS_OnContentChanged()
+{
+    this.Source = await JS_GetSourceAsync();
+
+    this.OnSourceChangedAsync(); // do NOT await
+
+    return "occ";
 }
 }

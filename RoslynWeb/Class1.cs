@@ -120,22 +120,13 @@ namespace MerryYellow.RoslynWeb
             var ws = CreateWorkspace();
             var doc = ws.AddDocument(ws.CurrentSolution.Projects.First().Id, "myfile.cs", SourceText.From(source));
 
-            PatternMaker.ELogger.OnLogged += ELogger_OnLogged;
+            //PatternMaker.ELogger.OnLogged += ELogger_OnLogged;
 
             var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, null);
-            /*var newDoc = newSol.Projects.First().Documents.First();
+            var newDoc = newSol.Projects.First().Documents.First();
 
             var newText = newDoc.GetTextAsync().Result;
-            return newText.ToString();*/
-            return "";
-        }
-
-        public delegate void OnLoggedDelegate(int level, string message);
-        public static event OnLoggedDelegate OnLogged;
-        private static void ELogger_OnLogged(PatternMaker.ELogger.Level level, string message)
-        {
-            if (OnLogged != null)
-                OnLogged((int)level, message);
+            return newText.ToString();
         }
 
         static AdhocWorkspace CreateWorkspace()

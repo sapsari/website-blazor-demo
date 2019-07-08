@@ -52,7 +52,8 @@
             originalEditor.onDidChangeModelContent(function (e) {
                 //var person = prompt("Please enter your name", "Harry Potter");
                 //dotnet.invokeMethodAsync('OnContentChanged', e.value);
-                instance.invokeMethodAsync('OnContentChanged');
+                window.monacoEditor = diffEditor; // totally needed
+                instance.invokeMethodAsync('JS_OnContentChanged');
             });
 
             window.monacoEditor = diffEditor;
@@ -62,6 +63,11 @@
 
         window.GetMonacoEditorContent = () => {
             return window.monacoEditor.getOriginalEditor().getValue();
+        }
+
+        window.SetMonacoEditorContent = (modifiedSource) => {
+            window.monacoEditor.getModifiedEditor().setValue(modifiedSource);
+            return "modified";
         }
     </script>
 
