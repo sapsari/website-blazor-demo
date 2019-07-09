@@ -1,7 +1,106 @@
 ﻿@page "/"
+@inherits MerryYellow.BlazorDemo.Pages.CounterModel
+<!--
+@inject IJSRuntime JsRuntime;
+@inject HttpClient Http
+    -->
+<!--
+<h1>Counter</h1>
 
-<h1>Hello, world!</h1>
+<p>Current count: @currentCount</p>
+<p>Current JS: @jsString</p>
+    -->
+<ul>
+    <li>Debug: @DebugText<span class="close">x</span></li>
+    <li>Warning: Web assembly has many restrictions. Please download extension for the best experience.<span class="close">x</span></li>
+    <li>Status: @StatusText<span class="close">x</span></li>
+    <!--
+    <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
+    <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
+        -->
 
-Welcome to your new app.
+<li>
+    <label for="select_pattern">Pattern: </label>
+    <select id="select_pattern" @bind="@SelectedPattern">
+        @foreach (var p in this.GetPatternList())
+        {
+            <option value="@p">@p</option>
+        }
+    </select>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <label for="select_class">Class: </label>
+    <select id="select_class" @bind="@SelectedClass">
+        @foreach (var c in GetClassList())
+        {
+            <option value="@c">@c</option>
+        }
+    </select>
+</li>
+
+</ul>
+
+<!--
+<button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
+    -->
+
+<div id="monaco_container" style="width:100%;flex:1;border:1px solid grey"></div>
+
+
+@code {
+
+
+    bool isInitializing;
+    static int initCounter = 1;
+    protected override async Task OnAfterRenderAsync()
+    {
+        await base.OnAfterRenderAsync();
+
+        if (IsInitialized || isInitializing)
+            return;
+
+        isInitializing = true;
+
+        DebugText = "initCount: " + initCounter++;
+
+        var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
+        //string text = "yo";
+        try
+        {
+            text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+        }
+        catch (Exception e)
+        {
+            StatusText = e.ToString();
+            text = null;
+        }
+
+
+        this.Source = await JS_GetSourceAsync();
+        StatusText += "...";
+        StateHasChanged();
+
+        //GetClassList();
+        IsInitialized = true;
+
+        //StatusText = "Ready!";
+        await ApplyPatternAsync();
+
+        //StateHasChanged();
+
+
+
+        //await OnContentChanged(); tc
+
+        //StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task<string> JS_OnContentChanged()
+    {
+        this.Source = await JS_GetSourceAsync();
+
+        this.OnSourceChangedAsync(); // do NOT await
+
+        return "occ";
+    }
+}
