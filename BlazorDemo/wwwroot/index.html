@@ -40,7 +40,8 @@
             var diffEditor = monaco.editor.createDiffEditor(document.getElementById("monaco_container"), {
                 // You can optionally disable the resizing
                 enableSplitViewResizing: false,
-                originalEditable: true
+                originalEditable: true,
+                scrollBeyondLastLine:false
             });
             diffEditor.setModel({
                 original: originalModel,
@@ -58,6 +59,18 @@
 
             window.monacoEditor = diffEditor;
 
+            // closeable label stuff, not related to monaco
+            {
+                var closebtns = document.getElementsByClassName("close");
+                var i;
+
+                for (i = 0; i < closebtns.length; i++) {
+                  closebtns[i].addEventListener("click", function() {
+                    this.parentElement.style.display = 'none';
+                  });
+                }
+            }
+
             return "created";
         };
 
@@ -69,6 +82,8 @@
             window.monacoEditor.getModifiedEditor().setValue(modifiedSource);
             return "modified";
         }
+
+        
     </script>
 
 </body>

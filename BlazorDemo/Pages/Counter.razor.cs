@@ -99,7 +99,7 @@ namespace MerryYellow.BlazorDemo.Pages
 
                 //DebugText = $"_classList.Count:{_classList.Count} from source {source}";
 
-                if (!string.IsNullOrEmpty(_selectedClass) && _classList.Contains(_selectedClass))
+                if (!string.IsNullOrEmpty(SelectedClass) && _classList.Contains(SelectedClass))
                     ;//no-op
                 else
                     _selectedClass = _classList.ElementAtOrDefault(0);
@@ -128,7 +128,7 @@ namespace MerryYellow.BlazorDemo.Pages
             {
                 this.Source = await JS_GetSourceAsync();
                 //this._classList = null;
-                GetClassList();
+                GetClassList(); // needed for renaming class
                 await ApplyPatternAsync();
             }
         }
@@ -160,6 +160,11 @@ namespace MerryYellow.BlazorDemo.Pages
 
             await JS_SetSourceAsync(modifiedSource);
 
+            StateHasChanged();
+
+            // for updating select properly (so that currently selected item will continue to be selected after the list changes)
+            SelectedClass = SelectedClass;
+            //DebugText = "SC: " + SelectedClass;
             StateHasChanged();
 
             //return Task.FromResult()

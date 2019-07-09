@@ -131,10 +131,8 @@ namespace MerryYellow.RoslynWeb
 
         static AdhocWorkspace CreateWorkspace()
         {
-
-
             var workspace = new AdhocWorkspace();
-
+            
             var projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Create(), "MyProject", "MyProject", LanguageNames.CSharp);
             
             /*.

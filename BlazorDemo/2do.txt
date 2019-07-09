@@ -5,3 +5,13 @@ tabs for multiple files
 status bar
 
 align loading logo to center
+
+run unit tests (maker's)
+
+query for debugline
+
+warning line closeable
+
+3sec loading bar
+
+blazor loading bar (for init)
