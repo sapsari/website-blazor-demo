@@ -24,7 +24,7 @@ namespace MerryYellow.BlazorDemo.Pages
         public LogType StatusType = LogType.Standard;
         public string StatusText = "Initializing...";
         public string DebugText = "DebugLine";
-        //public string StatusType = ""
+
 
         string _selectedPattern, _selectedClass;
         public string SelectedPattern
@@ -187,7 +187,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
             catch (Exception e)
             {
-                //text = e.ToString();//**-
+                Log(e);
                 return string.Empty;
             }
         }
@@ -200,7 +200,20 @@ namespace MerryYellow.BlazorDemo.Pages
             }
             catch (Exception e)
             {
-                //text = e.ToString();//**-
+                Log(e);
+                return string.Empty;
+            }
+        }
+
+        public async Task<string> JS_SetThemeAsync(string theme)
+        {
+            try
+            {
+                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorTheme", theme);
+            }
+            catch (Exception e)
+            {
+                Log(e);
                 return string.Empty;
             }
         }
@@ -237,6 +250,13 @@ namespace MerryYellow.BlazorDemo.Pages
             {
                 ResetLog();
             }
+        }
+
+        public async Task OnThemeChangedAsync(UIChangeEventArgs e)
+        {
+            var theme = e.Value.ToString();
+            await JS_SetThemeAsync(theme == "Light" ? "vs" : "vs-dark");
+            Log("Theme changed");
         }
 
         /*

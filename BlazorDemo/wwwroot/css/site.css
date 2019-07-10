@@ -163,7 +163,8 @@ ul {
     /* Style the list items */
     ul li {
         border: 1px solid #ddd;
-        margin-top: -1px; /* Prevent double borders */
+        /*margin-top: -1px; /* Prevent double borders */
+        margin-bottom: -1px; /* Prevent double borders */
         background-color: #f6f6f6;
         padding: 12px;
         text-decoration: none;
@@ -201,11 +202,12 @@ ul {
     background-image: url("./../background_small.png");
     background-repeat: repeat;
     /*background-position: 0 9px;*/
+    z-index:1;
 }
 
 .header-bg {
     position: absolute;
-    z-index: -1;
+    /*z-index: -1;*/
     top: 0;
     height: 96px;
     right: 0;
@@ -245,4 +247,21 @@ ul {
         width: 100%;
         background: #FFC15A;
     }
+}
+
+
+.select_theme{
+    /*position:absolute;
+    right:12px;
+    top:12px;*/
+    float: right;
+}
+
+label{
+    margin-bottom:0;
+}
+
+.inversed {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
 }

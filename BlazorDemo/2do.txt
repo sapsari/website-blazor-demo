@@ -13,12 +13,10 @@ custom context menu
 links to, marketplace, source, bug, meryel, patreon, about
 footer
 
-themes (dark, light)
-
 analytics
 
 mobile test
 
-status fade out
-
 post on blog?
+
+cookie for theme

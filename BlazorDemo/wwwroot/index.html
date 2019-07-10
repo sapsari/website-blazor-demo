@@ -64,7 +64,6 @@
                 progressbarinner.style.animation = 'none';
                 progressbarinner.offsetHeight; /* trigger reflow */
                 progressbarinner.style.animation = null; 
-
             });
 
             window.monacoEditor = diffEditor;
@@ -91,6 +90,24 @@
         window.SetMonacoEditorContent = (modifiedSource) => {
             window.monacoEditor.getModifiedEditor().setValue(modifiedSource);
             return "modified";
+        }
+
+        window.SetMonacoEditorTheme = (theme) => {
+            monaco.editor.setTheme(theme);
+
+            var top_ul = document.getElementById("top_ul");
+            if (top_ul.className != "inversed")
+                top_ul.className = "inversed";
+            else
+                top_ul.className = "";
+
+            var content = document.getElementById("content");
+            if (content.style.backgroundColor != "black")
+                content.style.backgroundColor = "black";
+            else
+                content.style.backgroundColor = "white";
+
+            return "themefied";
         }
 
         

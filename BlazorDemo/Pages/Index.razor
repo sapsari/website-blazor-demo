@@ -19,7 +19,7 @@
         </a>
     </div>
 
-<ul>
+<ul id="top_ul">
     <li style="display:none">Debug: @DebugText<span class="close">x</span></li>
     <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
     <!--
@@ -44,7 +44,16 @@
         }
     </select>
 
-    @StatusText
+    <span>@StatusText</span>
+
+    <div class="select_theme">
+        <label for="select_theme">Theme </label>
+        <select style="margin-right:0px" @onchange="@OnThemeChangedAsync">
+            <option value="Light">Light</option>
+            <option value="Dark">Dark</option>
+        </select>
+    </div>
+
 </li>
 
 </ul>
