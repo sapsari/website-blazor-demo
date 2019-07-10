@@ -21,6 +21,7 @@ namespace MerryYellow.BlazorDemo.Pages
 
         public bool IsInitialized;
 
+        public LogType StatusType = LogType.Standard;
         public string StatusText = "Initializing...";
         public string DebugText = "DebugLine";
         //public string StatusType = ""
@@ -72,7 +73,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
             catch(Exception e)
             {
-                StatusText = e.ToString();
+                Log(e);
                 _patternList = null;
                 return new List<string>();
             }
@@ -108,7 +109,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
             catch (Exception e)
             {
-                StatusText = e.ToString();
+                Log(e);
                 _classList = null;
                 return new List<string>();
             }
@@ -120,12 +121,16 @@ namespace MerryYellow.BlazorDemo.Pages
         Guid lastSourceUpdateGuid;
         public async Task OnSourceChangedAsync()
         {
+            Log("Will apply pattern in seconds");
+
             var guid = Guid.NewGuid();
             this.lastSourceUpdateGuid = guid;
             await Task.Delay(3000);
 
             if (guid == lastSourceUpdateGuid)
             {
+                ResetLog();
+
                 this.Source = await JS_GetSourceAsync();
                 //this._classList = null;
                 GetClassList(); // needed for renaming class
@@ -145,7 +150,8 @@ namespace MerryYellow.BlazorDemo.Pages
             var source = Source;
             var modifiedSource = string.Empty;
 
-            StatusText = $"Pattern {SelectedPattern} applied over class {SelectedClass} {counter++} {_classList?.Count}";
+            Log($"Pattern {SelectedPattern} applied over class {SelectedClass}");
+            //StatusText = $"Pattern {SelectedPattern} applied over class {SelectedClass} {counter++} {_classList?.Count}";
 
             try
             {
@@ -154,7 +160,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
             catch (Exception e)
             {
-                StatusText = e.ToString();
+                Log(e);
             }
 
 
@@ -196,6 +202,40 @@ namespace MerryYellow.BlazorDemo.Pages
             {
                 //text = e.ToString();//**-
                 return string.Empty;
+            }
+        }
+
+        public enum LogType { Error, Warning, Standard}
+        public void Log(string message, LogType type = LogType.Standard)
+        {
+            if (type <= StatusType)
+            {
+                StatusType = type;
+                StatusText = message;
+            }
+            StateHasChanged();
+            if (type == LogType.Standard)
+                AutoResetLogAsync(); // do NOT await
+        }
+        public void Log(Exception e) => Log(e.ToString(), LogType.Error);
+        
+        public void ResetLog()
+        {
+            StatusType = LogType.Standard;
+            StatusText = "";
+            StateHasChanged();
+        }
+
+        Guid lastLogResetGuid;
+        public async Task AutoResetLogAsync()
+        {
+            var guid = Guid.NewGuid();
+            this.lastLogResetGuid = guid;
+            await Task.Delay(5000);
+
+            if (guid == lastLogResetGuid && StatusType == LogType.Standard)
+            {
+                ResetLog();
             }
         }
 

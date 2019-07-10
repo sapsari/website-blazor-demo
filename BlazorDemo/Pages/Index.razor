@@ -28,7 +28,7 @@
         -->
 
 <li>
-    <label for="select_pattern">Pattern: </label>
+    <label for="select_pattern">Pattern </label>
     <select id="select_pattern" @bind="@SelectedPattern">
         @foreach (var p in this.GetPatternList())
         {
@@ -36,7 +36,7 @@
         }
     </select>
 
-    <label for="select_class">Class: </label>
+    <label for="select_class">Class </label>
     <select id="select_class" @bind="@SelectedClass">
         @foreach (var c in GetClassList())
         {
@@ -44,7 +44,7 @@
         }
     </select>
 
-    Status: @StatusText
+    @StatusText
 </li>
 
 </ul>
@@ -63,58 +63,61 @@
 @code {
 
 
-    bool isInitializing;
-    static int initCounter = 1;
-    protected override async Task OnAfterRenderAsync()
+bool isInitializing;
+static int initCounter = 1;
+protected override async Task OnAfterRenderAsync()
+{
+    await base.OnAfterRenderAsync();
+
+    if (IsInitialized || isInitializing)
+        return;
+
+    isInitializing = true;
+
+    DebugText = "initCount: " + initCounter++;
+
+    var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
+    //string text = "yo";
+    try
     {
-        await base.OnAfterRenderAsync();
-
-        if (IsInitialized || isInitializing)
-            return;
-
-        isInitializing = true;
-
-        DebugText = "initCount: " + initCounter++;
-
-        var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
-        //string text = "yo";
-        try
-        {
-            text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
-        }
-        catch (Exception e)
-        {
-            StatusText = e.ToString();
-            text = null;
-        }
-
-
-        this.Source = await JS_GetSourceAsync();
-        StatusText += "...";
-        StateHasChanged();
-
-        //GetClassList();
-        IsInitialized = true;
-
-        //StatusText = "Ready!";
-        await ApplyPatternAsync();
-
-        //StateHasChanged();
-
-
-
-        //await OnContentChanged(); tc
-
-        //StateHasChanged();
+        text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+    }
+    catch (Exception e)
+    {
+        Log(e);
+        text = null;
     }
 
-    [JSInvokable]
-    public async Task<string> JS_OnContentChanged()
-    {
-        this.Source = await JS_GetSourceAsync();
 
-        this.OnSourceChangedAsync(); // do NOT await
+    this.Source = await JS_GetSourceAsync();
+    StatusText += "...";
+    StateHasChanged();
 
-        return "occ";
-    }
+    //GetClassList();
+    IsInitialized = true;
+
+    //StatusText = "Ready!";
+    await ApplyPatternAsync();
+
+    StatusText = "";
+    StateHasChanged();
+
+    //StateHasChanged();
+
+
+
+    //await OnContentChanged(); tc
+
+    //StateHasChanged();
+}
+
+[JSInvokable]
+public async Task<string> JS_OnContentChanged()
+{
+    this.Source = await JS_GetSourceAsync();
+
+    this.OnSourceChangedAsync(); // do NOT await
+
+    return "occ";
+}
 }
