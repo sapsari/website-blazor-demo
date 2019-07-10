@@ -10,10 +10,18 @@
 <p>Current count: @currentCount</p>
 <p>Current JS: @jsString</p>
     -->
+
+    <div class="header">
+        <img src="header_small.png" class="header-image" />
+        <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank" style="position:absolute;right:1.5rem!important;">
+            <img border="0" alt="Get for VS" src="get.png" width="163" height="96"
+                 onmouseover="this.src='get2.png';" onmouseout="this.src='get.png';">
+        </a>
+    </div>
+
 <ul>
     <li>Debug: @DebugText<span class="close">x</span></li>
-    <li>Warning: Web assembly has many restrictions. Please download extension for the best experience.<span class="close">x</span></li>
-    <li>Status: @StatusText<span class="close">x</span></li>
+    <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
     <!--
     <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
     <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
@@ -35,6 +43,8 @@
             <option value="@c">@c</option>
         }
     </select>
+
+    Status: @StatusText
 </li>
 
 </ul>
