@@ -68,65 +68,70 @@
 
 <div id="monaco_container" style="width:100%;min-height:400px;flex:1;border:1px solid grey"></div>
 
+<span class="footer">
+    <span id="footer_inner">
+        <a class="link" href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">VS Marketplace</a> | <a class="link" href="https://github.com/sapsari/website-blazor-demo" target="_blank">Website Source</a> | <a class="link" href="https://www.patreon.com/csharpshark" target="_blank">Patronage</a> | <a class="link" href="mailto:merryyellow@outlook.com" target="_blank">Bugs & Feedback</a>
+    </span>
+</span>
 
-@code {
+    @code {
 
 
-bool isInitializing;
-static int initCounter = 1;
-protected override async Task OnAfterRenderAsync()
-{
-    await base.OnAfterRenderAsync();
+        bool isInitializing;
+        static int initCounter = 1;
+        protected override async Task OnAfterRenderAsync()
+        {
+            await base.OnAfterRenderAsync();
 
-    if (IsInitialized || isInitializing)
-        return;
+            if (IsInitialized || isInitializing)
+                return;
 
-    isInitializing = true;
+            isInitializing = true;
 
-    DebugText = "initCount: " + initCounter++;
+            DebugText = "initCount: " + initCounter++;
 
-    var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
-    //string text = "yo";
-    try
-    {
-        text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+            var text = await Http.GetStringAsync("sample-data/SampleCode.txt");
+            //string text = "yo";
+            try
+            {
+                text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                text = null;
+            }
+
+
+            this.Source = await JS_GetSourceAsync();
+            StatusText += "...";
+            StateHasChanged();
+
+            //GetClassList();
+            IsInitialized = true;
+
+            //StatusText = "Ready!";
+            await ApplyPatternAsync();
+
+            StatusText = "";
+            StateHasChanged();
+
+            //StateHasChanged();
+
+
+
+            //await OnContentChanged(); tc
+
+            //StateHasChanged();
+        }
+
+        [JSInvokable]
+        public async Task<string> JS_OnContentChanged()
+        {
+            this.Source = await JS_GetSourceAsync();
+
+            this.OnSourceChangedAsync(); // do NOT await
+
+            return "occ";
+        }
     }
-    catch (Exception e)
-    {
-        Log(e);
-        text = null;
-    }
-
-
-    this.Source = await JS_GetSourceAsync();
-    StatusText += "...";
-    StateHasChanged();
-
-    //GetClassList();
-    IsInitialized = true;
-
-    //StatusText = "Ready!";
-    await ApplyPatternAsync();
-
-    StatusText = "";
-    StateHasChanged();
-
-    //StateHasChanged();
-
-
-
-    //await OnContentChanged(); tc
-
-    //StateHasChanged();
-}
-
-[JSInvokable]
-public async Task<string> JS_OnContentChanged()
-{
-    this.Source = await JS_GetSourceAsync();
-
-    this.OnSourceChangedAsync(); // do NOT await
-
-    return "occ";
-}
-}

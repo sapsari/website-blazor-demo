@@ -265,3 +265,18 @@ label{
     -webkit-filter: invert(100%);
     filter: invert(100%);
 }
+
+.footer {
+    font-size: x-small;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+}
+
+.footer link{
+
+}

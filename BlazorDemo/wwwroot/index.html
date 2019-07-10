@@ -49,7 +49,7 @@
                 original: originalModel,
                 modified: modifiedModel
             });
-            diffEditor.getModifiedEditor().updateOptions({readOnly:true}); // make right-hand-side readonly
+            diffEditor.getModifiedEditor().updateOptions({ readOnly: true }); // make right-hand-side readonly
 
             var originalEditor = diffEditor.getOriginalEditor();
             originalEditor.onDidChangeModelContent(function (e) {
@@ -63,7 +63,7 @@
                 progressbarinner.style.animationPlayState = 'running';
                 progressbarinner.style.animation = 'none';
                 progressbarinner.offsetHeight; /* trigger reflow */
-                progressbarinner.style.animation = null; 
+                progressbarinner.style.animation = null;
             });
 
             window.monacoEditor = diffEditor;
@@ -74,9 +74,9 @@
                 var i;
 
                 for (i = 0; i < closebtns.length; i++) {
-                  closebtns[i].addEventListener("click", function() {
-                    this.parentElement.style.display = 'none';
-                  });
+                    closebtns[i].addEventListener("click", function () {
+                        this.parentElement.style.display = 'none';
+                    });
                 }
             }
 
@@ -96,22 +96,35 @@
             monaco.editor.setTheme(theme);
 
             var top_ul = document.getElementById("top_ul");
-            if (top_ul.className != "inversed")
-                top_ul.className = "inversed";
-            else
-                top_ul.className = "";
-
             var content = document.getElementById("content");
-            if (content.style.backgroundColor != "black")
+            var footer = document.getElementById("footer_inner");
+            if (top_ul.className != "inversed") {
+                top_ul.className = "inversed";
+                footer.className = "inversed";
                 content.style.backgroundColor = "black";
-            else
+            }
+            else {
+                top_ul.className = "";
+                footer.className = "";
                 content.style.backgroundColor = "white";
+            }
 
             return "themefied";
         }
 
-        
+
     </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-143606436-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-143606436-1');
+    </script>
+
 
 </body>
 </html>

@@ -10,11 +10,6 @@ blazor loading bar (for init)
 
 custom context menu
 
-links to, marketplace, source, bug, meryel, patreon, about
-footer
-
-analytics
-
 mobile test
 
 post on blog?
