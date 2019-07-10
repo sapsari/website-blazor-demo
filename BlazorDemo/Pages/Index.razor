@@ -20,7 +20,7 @@
     </div>
 
 <ul>
-    <li>Debug: @DebugText<span class="close">x</span></li>
+    <li style="display:none">Debug: @DebugText<span class="close">x</span></li>
     <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
     <!--
     <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
@@ -53,7 +53,11 @@
 <button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
     -->
 
-<div id="monaco_container" style="width:100%;flex:1;border:1px solid grey"></div>
+<div id="progress_bar" class="progressbar">
+    <div id="progress_bar_inner" class="inner"></div>
+</div>
+
+<div id="monaco_container" style="width:100%;min-height:400px;flex:1;border:1px solid grey"></div>
 
 
 @code {

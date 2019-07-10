@@ -214,3 +214,35 @@ ul {
     background-repeat: repeat;
     background-position-x: -1.5rem !important;
 }
+
+
+.progressbar {
+    width: 100%;
+}
+
+    .progressbar .inner {
+        height: 3px;
+        animation: progressbar-countdown;
+        /* Placeholder, this will be updated using javascript */
+        animation-duration: 3s;
+        /* We stop in the end */
+        animation-iteration-count: 1;
+        /* Stay on pause when the animation is finished finished */
+        animation-fill-mode: forwards;
+        /* We start paused, we start the animation using javascript */
+        animation-play-state: running;
+        /* We want a linear animation, ease-out is standard */
+        animation-timing-function: linear;
+    }
+
+@keyframes progressbar-countdown {
+    0% {
+        width: 0%;
+        background: #FFC15A;
+    }
+
+    100% {
+        width: 100%;
+        background: #FFC15A;
+    }
+}

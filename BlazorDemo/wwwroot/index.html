@@ -57,6 +57,14 @@
                 //dotnet.invokeMethodAsync('OnContentChanged', e.value);
                 window.monacoEditor = diffEditor; // totally needed
                 instance.invokeMethodAsync('JS_OnContentChanged');
+
+                // reset progress bar animation
+                var progressbarinner = document.getElementById('progress_bar_inner');
+                progressbarinner.style.animationPlayState = 'running';
+                progressbarinner.style.animation = 'none';
+                progressbarinner.offsetHeight; /* trigger reflow */
+                progressbarinner.style.animation = null; 
+
             });
 
             window.monacoEditor = diffEditor;

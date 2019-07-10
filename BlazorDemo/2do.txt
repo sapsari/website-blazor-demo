@@ -6,23 +6,18 @@ run unit tests (maker's)
 
 query for debugline
 
-3sec loading bar
-
 blazor loading bar (for init)
 
 custom context menu
 
 links to, marketplace, source, bug, meryel, patreon, about
+footer
 
 themes (dark, light)
-
-footer
 
 analytics
 
 mobile test
-
-min-height (monaco)
 
 status fade out
 
