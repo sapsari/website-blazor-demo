@@ -53,6 +53,11 @@ namespace MerryYellow.BlazorDemo.Pages
             }
         }
 
+        public void OnClassSelectionChanged(UIChangeEventArgs e)
+        {
+            SelectedClass = e.Value.ToString();
+        }
+
         bool internalSet;
 
         List<string> _patternList;
@@ -99,7 +104,7 @@ namespace MerryYellow.BlazorDemo.Pages
                 else
                     _classList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetClassList(source));
 
-                //DebugText = $"_classList.Count:{_classList.Count} from source {source}";
+                DebugText = $"selectedClass:{_selectedClass} _classList.Count:{_classList.Count} from source {source}";
 
                 if (!string.IsNullOrEmpty(SelectedClass) && _classList.Contains(SelectedClass))
                     ;//no-op
@@ -170,9 +175,9 @@ namespace MerryYellow.BlazorDemo.Pages
             StateHasChanged();
 
             // for updating select properly (so that currently selected item will continue to be selected after the list changes)
-            SelectedClass = SelectedClass;
+            //SelectedClass = _selectedClass;
             //DebugText = "SC: " + SelectedClass;
-            StateHasChanged();
+            //StateHasChanged();
 
             //return Task.FromResult()
         }
@@ -273,5 +278,12 @@ namespace MerryYellow.BlazorDemo.Pages
                 level == PatternMaker.ELogger.Level.WarningMono)
                 this.Log(message, LogType.Warning);
         }
+
+        public bool IsDebug =>
+#if DEBUG
+            true;
+#else
+            false;
+#endif
     }
 }

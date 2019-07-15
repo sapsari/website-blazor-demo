@@ -19,44 +19,48 @@
         </a>
     </div>
 
-<ul id="top_ul">
-    <li style="display:none">Debug: @DebugText<span class="close">x</span></li>
-    <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
-    <!--
+    <ul id="top_ul">
+        @if (IsDebug)
+        {
+            <li>Debug: @DebugText<span class="close">x</span></li>
+        }
+
+        <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
+        <!--
     <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
     <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
         -->
 
-<li>
-    <label for="select_pattern">Pattern </label>
-    <select id="select_pattern" @bind="@SelectedPattern">
-        @foreach (var p in this.GetPatternList())
-        {
-            <option value="@p">@p</option>
-        }
-    </select>
+        <li>
+            <label for="select_pattern">Pattern </label>
+            <select id="select_pattern" @bind="@SelectedPattern">
+                @foreach (var p in this.GetPatternList())
+                {
+                    <option value="@p">@p</option>
+                }
+            </select>
 
-    <label for="select_class">Class </label>
-    <select id="select_class" @bind="@SelectedClass">
-        @foreach (var c in GetClassList())
-        {
-            <option value="@c">@c</option>
-        }
-    </select>
+            <label for="select_class">Class </label>
+            <select id="select_class" @onchange="@OnClassSelectionChanged">
+                @foreach (var c in GetClassList())
+                {
+                    <option value="@c" selected="@(c==SelectedClass)">@c</option>
+                }
+            </select>
 
-    <div class="select_theme_div">
-        <label for="select_theme">Theme </label>
-        <select id="select_theme" style="margin-right:0px" @onchange="@OnThemeChangedAsync">
-            <option value="Light">Light</option>
-            <option value="Dark">Dark</option>
-        </select>
-    </div>
+            <div class="select_theme_div">
+                <label for="select_theme">Theme </label>
+                <select id="select_theme" style="margin-right:0px" @onchange="@OnThemeChangedAsync">
+                    <option value="Light">Light</option>
+                    <option value="Dark">Dark</option>
+                </select>
+            </div>
 
-    <span>@StatusText</span>
+            <span>@StatusText</span>
 
-</li>
+        </li>
 
-</ul>
+    </ul>
 
 <!--
 <button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
