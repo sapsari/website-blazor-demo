@@ -10,6 +10,6 @@ custom context menu
 
 mobile test
 
-post on blog?
-
 cookie for theme
+
+options
