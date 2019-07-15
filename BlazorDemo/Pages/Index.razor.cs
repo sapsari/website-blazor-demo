@@ -65,7 +65,54 @@ namespace MerryYellow.BlazorDemo.Pages
 
         public string Source;
 
-        
+
+        string _setting1 = "Instance";
+        public string Setting1
+        {
+            get => _setting1;
+            set
+            {
+                _setting1 = value;
+                OnSettingsChanged();
+            }
+        }
+
+        string _setting2 = "_instance";
+        public string Setting2
+        {
+            get => _setting2;
+            set
+            {
+                _setting2 = value;
+                OnSettingsChanged();
+            }
+        }
+
+        bool _settingA = true;
+        public bool SettingA
+        {
+            get => _settingA;
+            set
+            {
+                _settingA = value;
+                OnSettingsChanged();
+            }
+        }
+        bool _settingB = true;
+        public bool SettingB
+        {
+            get => _settingB;
+            set
+            {
+                _settingB = value;
+                OnSettingsChanged();
+            }
+        }
+
+        public void OnSettingsChanged()
+        {
+            OnSourceChangedAsync();
+        }
 
         public IEnumerable<string> GetPatternList()
         {
@@ -129,6 +176,8 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             Log("Will apply pattern in seconds");
 
+            await JS_ResetProgressBarAsync();
+
             var guid = Guid.NewGuid();
             this.lastSourceUpdateGuid = guid;
             await Task.Delay(3000);
@@ -162,7 +211,8 @@ namespace MerryYellow.BlazorDemo.Pages
             try
             {
                 if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(SelectedPattern) && !string.IsNullOrEmpty(SelectedClass))
-                    modifiedSource = MerryYellow.RoslynWeb.Compiler.ApplyPattern(source, SelectedPattern, SelectedClass);
+                    modifiedSource = MerryYellow.RoslynWeb.Compiler.ApplyPattern(source, SelectedPattern, SelectedClass,
+                        Setting1, Setting2, SettingA, SettingB);
             }
             catch (Exception e)
             {
@@ -216,6 +266,19 @@ namespace MerryYellow.BlazorDemo.Pages
             try
             {
                 return await JsRuntime.InvokeAsync<string>("SetMonacoEditorTheme", theme);
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return string.Empty;
+            }
+        }
+
+        public async Task<string> JS_ResetProgressBarAsync()
+        {
+            try
+            {
+                return await JsRuntime.InvokeAsync<string>("ResetProgressBar");
             }
             catch (Exception e)
             {

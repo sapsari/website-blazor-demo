@@ -46,7 +46,8 @@ namespace MerryYellow.RoslynWeb
             //yield break;
         }
 
-        public static string ApplyPattern(string source, string patternName, string className)
+        public static string ApplyPattern(string source, string patternName, string className,
+            string setting1 = null, string setting2 = null, bool settingA = false, bool settingB = false)
         {
             var ws = CreateWorkspace();
             var doc = ws.AddDocument(ws.CurrentSolution.Projects.First().Id, "myfile.cs", SourceText.From(source));
@@ -54,7 +55,15 @@ namespace MerryYellow.RoslynWeb
             //**--compile check here
             //var comp = ws.CurrentSolution.Projects.First().GetCompilationAsync().Result;
 
-            var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, null);
+            var patternOptions = new PatternMaker.PatternOptionsCommon()
+            {
+                Option1 = setting1,
+                Option2 = setting2,
+                OptionA = settingA,
+                OptionB = settingB,
+            };
+
+            var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, patternOptions);
             var newDoc = newSol.Projects.First().Documents.First();
 
             var newText = newDoc.GetTextAsync().Result;

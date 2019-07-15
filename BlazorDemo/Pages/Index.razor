@@ -48,6 +48,8 @@
                 }
             </select>
 
+            <button type="button" id="settings_button">Settings ↓↓</button>
+
             <div class="select_theme_div">
                 <label for="select_theme">Theme </label>
                 <select id="select_theme" style="margin-right:0px" @onchange="@OnThemeChangedAsync">
@@ -57,6 +59,31 @@
             </div>
 
             <span>@StatusText</span>
+
+        </li>
+
+        <li id="settings_row" style="display:none">
+            <span tooltip="Name of the public accessor property, append '()' for method">
+                <label for="setting1_text">Accessor Name </label>
+                <input id="setting1_text" type="text" name="Setting1" @bind-Value="@Setting1" @bind-Value:event="oninput" />
+            </span>
+
+            <span tooltip="Name of the private instance field">
+                <label for="setting2_text">Instance Name </label>
+                <input id="setting2_text" type="text" name="Setting2" @bind-Value="@Setting2" @bind-Value:event="oninput" />
+            </span>
+
+            <span tooltip="Expression Body Definition '=>{;}'">
+                <label for="settingA_checkbox">Expr Body Def </label>
+                <input id="settingA_checkbox" type="checkbox" name="SettingA" @bind-Value="@SettingA" @bind-Value:event="oninput" checked />
+            </span>
+
+            <span tooltip="Lazy Initialization 'new Lazy<T>()'">
+                <label for="settingB_checkbox">Lazy Init </label>
+                <input id="settingB_checkbox" type="checkbox" name="SettingB" @bind-Value="@SettingB" @bind-Value:event="oninput" checked />
+            </span>
+
+            <span class="close">x</span>
 
         </li>
 

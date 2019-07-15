@@ -57,16 +57,11 @@
                 //dotnet.invokeMethodAsync('OnContentChanged', e.value);
                 window.monacoEditor = diffEditor; // totally needed
                 instance.invokeMethodAsync('JS_OnContentChanged');
-
-                // reset progress bar animation
-                var progressbarinner = document.getElementById('progress_bar_inner');
-                progressbarinner.style.animationPlayState = 'running';
-                progressbarinner.style.animation = 'none';
-                progressbarinner.offsetHeight; /* trigger reflow */
-                progressbarinner.style.animation = null;
             });
 
             window.monacoEditor = diffEditor;
+
+            var settings_button = document.getElementById("settings_button");
 
             // closeable label stuff, not related to monaco
             {
@@ -75,9 +70,27 @@
 
                 for (i = 0; i < closebtns.length; i++) {
                     closebtns[i].addEventListener("click", function () {
-                        this.parentElement.style.display = 'none';
+                        if (this.parentElement.id == "settings_row") { // to update button text
+                            settings_button.click();
+                        } else {
+                            this.parentElement.style.display = 'none';
+                        }
                     });
                 }
+            }
+
+            // toggle options row, not related to monaco
+            {
+                settings_button.addEventListener("click", function () {
+                    var row = document.getElementById("settings_row");
+                    if (row.style.display == "none") {
+                        row.style.display = "block";
+                        this.innerHTML = "Settings ↑↑";
+                    } else {
+                        row.style.display = "none";
+                        this.innerHTML = "Settings ↓↓";
+                    }
+                });
             }
 
             return "created";
@@ -112,6 +125,15 @@
             }
 
             return "themefied";
+        }
+
+        window.ResetProgressBar = () => {
+            // reset progress bar animation
+            var progressbarinner = document.getElementById('progress_bar_inner');
+            progressbarinner.style.animationPlayState = 'running';
+            progressbarinner.style.animation = 'none';
+            progressbarinner.offsetHeight; /* trigger reflow */
+            progressbarinner.style.animation = null;
         }
 
 
