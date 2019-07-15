@@ -2,8 +2,6 @@
 
 tabs for multiple files
 
-run unit tests (maker's)
-
 query for debugline
 
 blazor loading bar (for init)
