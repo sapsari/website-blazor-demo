@@ -15,89 +15,20 @@ namespace MerryYellow.RoslynWeb
 {
     public static class Compiler
     {
-        public class BlazorBoot
+        public delegate void OnLoggedDelegate(PatternMaker.ELogger.Level level, string message);
+        public static event OnLoggedDelegate OnLogged;
+
+        static Compiler()
         {
-            public string main { get; set; }
-            public string entryPoint { get; set; }
-            public string[] assemblyReferences { get; set; }
-            public string[] cssReferences { get; set; }
-            public string[] jsReferences { get; set; }
-            public bool linkerEnabled { get; set; }
+            PatternMaker.ELogger.OnLogged -= ELogger_OnLogged;
+            PatternMaker.ELogger.OnLogged += ELogger_OnLogged;
         }
 
-        private static Task InitializationTask;
-        private static List<MetadataReference> References;
-
-        public static void InitializeMetadataReferences(HttpClient client, BlazorBoot response)
+        private static void ELogger_OnLogged(PatternMaker.ELogger.Level level, string message)
         {
-            async Task InitializeInternal()
+            if (OnLogged != null)
             {
-                //var response = await client.GetJsonAsync<BlazorBoot>("_framework/blazor.boot.json");
-                var assemblies = await Task.WhenAll(response.assemblyReferences.Where(x => x.EndsWith(".dll")).Select(x => client.GetAsync("_framework/_bin/" + x)));
-
-                var references = new List<MetadataReference>(assemblies.Length);
-                foreach (var asm in assemblies)
-                {
-                    using (var task = await asm.Content.ReadAsStreamAsync())
-                    {
-                        references.Add(MetadataReference.CreateFromStream(task));
-                    }
-                }
-
-                References = references;
-            }
-            InitializationTask = InitializeInternal();
-        }
-
-        public static void WhenReady(Func<Task> action)
-        {
-            if (InitializationTask.Status != TaskStatus.RanToCompletion)
-            {
-                InitializationTask.ContinueWith(x => action());
-            }
-            else
-            {
-                action();
-            }
-        }
-
-        public static (bool success, Assembly asm) LoadSource(string source)
-        {
-            var compilation = CSharpCompilation.Create("DynamicCode")
-                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                .AddReferences(References)
-                .AddSyntaxTrees(CSharpSyntaxTree.ParseText(source));
-
-            ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
-
-            bool error = false;
-            foreach (Diagnostic diag in diagnostics)
-            {
-                switch (diag.Severity)
-                {
-                    case DiagnosticSeverity.Info:
-                        Console.WriteLine(diag.ToString());
-                        break;
-                    case DiagnosticSeverity.Warning:
-                        Console.WriteLine(diag.ToString());
-                        break;
-                    case DiagnosticSeverity.Error:
-                        error = true;
-                        Console.WriteLine(diag.ToString());
-                        break;
-                }
-            }
-
-            if (error)
-            {
-                return (false, null);
-            }
-
-            using (var outputAssembly = new MemoryStream())
-            {
-                compilation.Emit(outputAssembly);
-
-                return (true, Assembly.Load(outputAssembly.ToArray()));
+                OnLogged(level, message);
             }
         }
 
@@ -120,13 +51,17 @@ namespace MerryYellow.RoslynWeb
             var ws = CreateWorkspace();
             var doc = ws.AddDocument(ws.CurrentSolution.Projects.First().Id, "myfile.cs", SourceText.From(source));
 
-            //PatternMaker.ELogger.OnLogged += ELogger_OnLogged;
+            //**--compile check here
+            //var comp = ws.CurrentSolution.Projects.First().GetCompilationAsync().Result;
 
             var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, null);
             var newDoc = newSol.Projects.First().Documents.First();
 
             var newText = newDoc.GetTextAsync().Result;
             return newText.ToString();
+            
+            //**--unit test here
+            //return PatternMaker.Maker.UnitTestForBlazor(ws.CurrentSolution);
         }
 
         static AdhocWorkspace CreateWorkspace()

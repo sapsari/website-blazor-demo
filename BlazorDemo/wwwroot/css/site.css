@@ -250,11 +250,12 @@ ul {
 }
 
 
-.select_theme{
+.select_theme_div {
     /*position:absolute;
     right:12px;
     top:12px;*/
     float: right;
+    margin-left: 50px;
 }
 
 label{

@@ -21,6 +21,7 @@ namespace MerryYellow.BlazorDemo.Pages
 
         public bool IsInitialized;
 
+         
         public LogType StatusType = LogType.Standard;
         public string StatusText = "Initializing...";
         public string DebugText = "DebugLine";
@@ -224,7 +225,12 @@ namespace MerryYellow.BlazorDemo.Pages
             if (type <= StatusType)
             {
                 StatusType = type;
-                StatusText = message;
+                if (StatusType == LogType.Standard)
+                    StatusText = message;
+                else
+                //    StatusText += message;
+                    StatusText = message;
+
             }
             StateHasChanged();
             if (type == LogType.Standard)
@@ -259,47 +265,13 @@ namespace MerryYellow.BlazorDemo.Pages
             Log("Theme changed");
         }
 
-        /*
-        public void Run()
+        public void Compiler_OnLogged(PatternMaker.ELogger.Level level, string message)
         {
-            Output += "Y";
-
-            //var patterns = Maker.GetPatternList();
-            //Output += string.Concat(patterns);
-
-            var source = 
-@"
-using System;
- 
-public class MyClass
-{
-    public static void Main()
-    {
-    }
-}
-";
-
-            Output += "<";
-
-
-            try
-            {
-
-            var classList = MerryYellow.RoslynWeb.Compiler.GetClassList(source);
-            Output += string.Concat(classList);
-            }
-            catch(Exception e)
-            {
-                Output += e.ToString();
-            }
-
-            Output += ">";
-
-            //Maker.
-
-            StateHasChanged();
+            if (level == PatternMaker.ELogger.Level.Error)
+                this.Log(message, LogType.Error);
+            else if (level == PatternMaker.ELogger.Level.Warning ||
+                level == PatternMaker.ELogger.Level.WarningMono)
+                this.Log(message, LogType.Warning);
         }
-        */
-
     }
 }

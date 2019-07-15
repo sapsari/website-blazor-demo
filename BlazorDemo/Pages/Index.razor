@@ -44,15 +44,15 @@
         }
     </select>
 
-    <span>@StatusText</span>
-
-    <div class="select_theme">
+    <div class="select_theme_div">
         <label for="select_theme">Theme </label>
-        <select style="margin-right:0px" @onchange="@OnThemeChangedAsync">
+        <select id="select_theme" style="margin-right:0px" @onchange="@OnThemeChangedAsync">
             <option value="Light">Light</option>
             <option value="Dark">Dark</option>
         </select>
     </div>
+
+    <span>@StatusText</span>
 
 </li>
 
@@ -87,6 +87,9 @@
                 return;
 
             isInitializing = true;
+
+        RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
+        RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
 
             DebugText = "initCount: " + initCounter++;
 
