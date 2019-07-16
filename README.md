@@ -13,4 +13,4 @@ How to use:
 * In project RoslynWeb, remove PatternMaker from the references, add your own Roslyn based project or dll. Also cleanup method calls to PatternMaker.
 * When building or publishing; add "Microsoft.CodeAnalysis.CSharp.Workspaces.dll" to assemblyReferences in blazor.boot.json each time you build; also copy the dll to _bin folder for once (RoslynWebExecutable should have this dll on its output folder)
 
-Also don't forget that Blazor uses Mono runtime, not .Net Core. So be prepared to recieve some errors on your Roslyn based project. I had to fix three or four parts, mostly related with symbols.
+Also don't forget that Blazor uses Mono runtime, not .Net Core. So be prepared to receive some errors on your Roslyn based project. I had to fix three or four parts, mostly related with symbols.
