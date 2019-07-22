@@ -3,7 +3,7 @@
 
 ### [Try online](https://patternmaker.netlify.com)
 
-### [2nd demo](https://enchanter.netlify.com)
+### [2nd demo](https://enchanter.netlify.com) (cloned from this, with IL Code view)
 
 This is a sample website that uses Blazor (client-side) to run Roslyn based projects on the browser with Monaco Editor.
 
