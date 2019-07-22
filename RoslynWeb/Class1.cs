@@ -9,22 +9,24 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using ELogger = MerryYellow.PatternMaker.ELogger;
+using Maker = MerryYellow.PatternMaker.Maker;
 
 
 namespace MerryYellow.RoslynWeb
 {
     public static class Compiler
     {
-        public delegate void OnLoggedDelegate(PatternMaker.ELogger.Level level, string message);
+        public delegate void OnLoggedDelegate(ELogger.Level level, string message);
         public static event OnLoggedDelegate OnLogged;
 
         static Compiler()
         {
-            PatternMaker.ELogger.OnLogged -= ELogger_OnLogged;
-            PatternMaker.ELogger.OnLogged += ELogger_OnLogged;
+            ELogger.OnLogged -= ELogger_OnLogged;
+            ELogger.OnLogged += ELogger_OnLogged;
         }
 
-        private static void ELogger_OnLogged(PatternMaker.ELogger.Level level, string message)
+        private static void ELogger_OnLogged(ELogger.Level level, string message)
         {
             if (OnLogged != null)
             {
@@ -34,16 +36,16 @@ namespace MerryYellow.RoslynWeb
 
         public static IEnumerable<string> GetPatternList()
         {
-            return PatternMaker.Maker.GetPatternList();
+            return Maker.GetPatternList();
         }
 
         public static IEnumerable<string> GetClassList(string source)
         {
+            SystemDlls = null;//**--
             var ws = CreateWorkspace();
             var newDoc = ws.AddDocument(ws.CurrentSolution.Projects.First().Id, "myfile.cs", SourceText.From(source));
 
-            return PatternMaker.Maker.GetClassList(ws);
-            //yield break;
+            return Maker.GetClassList(ws);
         }
 
         public static string ApplyPattern(string source, string patternName, string className,
@@ -63,7 +65,7 @@ namespace MerryYellow.RoslynWeb
                 OptionB = settingB,
             };
 
-            var newSol = PatternMaker.Maker.ApplyPattern(ws.CurrentSolution, patternName, className, patternOptions);
+            var newSol = Maker.ApplyPattern(ws.CurrentSolution, patternName, className, patternOptions);
             var newDoc = newSol.Projects.First().Documents.First();
 
             var newText = newDoc.GetTextAsync().Result;
@@ -73,17 +75,25 @@ namespace MerryYellow.RoslynWeb
             //return PatternMaker.Maker.UnitTestForBlazor(ws.CurrentSolution);
         }
 
+        public static Stream[] SystemDlls;
         static AdhocWorkspace CreateWorkspace()
         {
             var workspace = new AdhocWorkspace();
             
             var projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Create(), "MyProject", "MyProject", LanguageNames.CSharp);
             
-            /*.
-   WithMetadataReferences(new[]
-   {
-       MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
-   });*/
+            var references = new List<MetadataReference>();
+            if (Maker.IsMonoRuntime)
+            {
+                if (SystemDlls != null)
+                    references.AddRange(SystemDlls.Select(sd => MetadataReference.CreateFromStream(sd)));
+            }
+            else
+            {
+                references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+            }
+            projectInfo = projectInfo.WithMetadataReferences(references);
+
             var project = workspace.AddProject(projectInfo);
             //var document = workspace.AddDocument(project.Id, "MyFile.cs", SourceText.From(code));
             

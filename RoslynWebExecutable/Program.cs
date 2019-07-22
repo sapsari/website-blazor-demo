@@ -30,7 +30,8 @@ namespace ConsoleApplication1
 
             var pl = Compiler.GetPatternList();
             var cl = Compiler.GetClassList(Source);
-            var ns = Compiler.ApplyPattern(Source, pl.ElementAt(0), cl.ElementAt(0));
+            var ns = Compiler.ApplyPattern(Source, pl.ElementAt(0), cl.ElementAt(0),
+                "Instance", "_instance", true, true);
 
             
         }

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using ELogger = MerryYellow.PatternMaker.ELogger;
 
 namespace MerryYellow.BlazorDemo.Pages
 {
@@ -146,12 +147,14 @@ namespace MerryYellow.BlazorDemo.Pages
                 //var source = this.JS_GetSourceAsync().GetAwaiter().GetResult();
                 var source = Source;
 
+                //CreateSystemDlls().GetAwaiter().GetResult();
+
                 if (string.IsNullOrEmpty(source))
                     _classList = new List<string>();
                 else
                     _classList = new List<string>(MerryYellow.RoslynWeb.Compiler.GetClassList(source));
 
-                DebugText = $"selectedClass:{_selectedClass} _classList.Count:{_classList.Count} from source {source}";
+                //DebugText = $"selectedClass:{_selectedClass} _classList.Count:{_classList.Count} from source {source}";
 
                 if (!string.IsNullOrEmpty(SelectedClass) && _classList.Contains(SelectedClass))
                     ;//no-op
@@ -208,6 +211,8 @@ namespace MerryYellow.BlazorDemo.Pages
             Log($"Pattern {SelectedPattern} applied over class {SelectedClass}");
             //StatusText = $"Pattern {SelectedPattern} applied over class {SelectedClass} {counter++} {_classList?.Count}";
 
+            await CreateSystemDlls();
+
             try
             {
                 if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(SelectedPattern) && !string.IsNullOrEmpty(SelectedClass))
@@ -230,6 +235,20 @@ namespace MerryYellow.BlazorDemo.Pages
             //StateHasChanged();
 
             //return Task.FromResult()
+        }
+
+        private async Task CreateSystemDlls()
+        {
+            return; // TODO, remove this line for loading dlls
+            //if (RoslynWeb.Compiler.SystemDlls == null)
+            {
+                var dllStreams = new Task<Stream>[]
+                    {
+                        Http.GetStreamAsync("_framework/_bin/mscorlib.dll"),
+                    };
+                await Task.WhenAll(dllStreams);
+                RoslynWeb.Compiler.SystemDlls = dllStreams.Select(s => s.Result).ToArray();
+            }
         }
 
         static int counterSource = 1;
@@ -333,12 +352,12 @@ namespace MerryYellow.BlazorDemo.Pages
             Log("Theme changed");
         }
 
-        public void Compiler_OnLogged(PatternMaker.ELogger.Level level, string message)
+        public void Compiler_OnLogged(ELogger.Level level, string message)
         {
-            if (level == PatternMaker.ELogger.Level.Error)
+            if (level == ELogger.Level.Error)
                 this.Log(message, LogType.Error);
-            else if (level == PatternMaker.ELogger.Level.Warning ||
-                level == PatternMaker.ELogger.Level.WarningMono)
+            else if (level == ELogger.Level.Warning ||
+                level == ELogger.Level.WarningMono)
                 this.Log(message, LogType.Warning);
         }
 
