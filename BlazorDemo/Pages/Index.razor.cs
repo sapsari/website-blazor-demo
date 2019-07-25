@@ -12,7 +12,7 @@ using ELogger = MerryYellow.PatternMaker.ELogger;
 namespace MerryYellow.BlazorDemo.Pages
 {
 
-    public class CounterModel : ComponentBase
+    public class PageModel : ComponentBase
     {
         [Inject]
         protected Microsoft.JSInterop.IJSRuntime JsRuntime { get; set; }
