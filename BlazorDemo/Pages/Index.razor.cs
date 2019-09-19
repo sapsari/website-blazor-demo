@@ -54,7 +54,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
         }
 
-        public void OnClassSelectionChanged(UIChangeEventArgs e)
+        public void OnClassSelectionChanged(ChangeEventArgs e)
         {
             SelectedClass = e.Value.ToString();
         }
@@ -133,7 +133,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
         }
 
-        public IEnumerable<string> GetClassList()
+        public IEnumerable<string> GetClassList(string sourceArg = null)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace MerryYellow.BlazorDemo.Pages
                 //var source = this.getSource?.Invoke();
                 //var source = "";
                 //var source = this.JS_GetSourceAsync().GetAwaiter().GetResult();
-                var source = Source;
+                var source = sourceArg ?? Source;
 
                 //CreateSystemDlls().GetAwaiter().GetResult();
 
@@ -166,7 +166,7 @@ namespace MerryYellow.BlazorDemo.Pages
             catch (Exception e)
             {
                 Log(e);
-                _classList = null;
+                _classList = new List<string>();
                 return new List<string>();
             }
 
@@ -256,7 +256,7 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             try
             {
-                var source = await JsRuntime.InvokeAsync<string>("GetMonacoEditorContent");
+                var source = await JsRuntime.InvokeAsync<string>("GetMonacoEditorContent", new object[] { });
                 //DebugText = $"{counterSource++} Source:{source}";
                 return source;
             }
@@ -271,7 +271,7 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             try
             {
-                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorContent", modifiedSource);
+                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorContent", new object[] { modifiedSource });
             }
             catch (Exception e)
             {
@@ -284,7 +284,7 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             try
             {
-                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorTheme", theme);
+                return await JsRuntime.InvokeAsync<string>("SetMonacoEditorTheme", new object[] { theme });
             }
             catch (Exception e)
             {
@@ -297,7 +297,7 @@ namespace MerryYellow.BlazorDemo.Pages
         {
             try
             {
-                return await JsRuntime.InvokeAsync<string>("ResetProgressBar");
+                return await JsRuntime.InvokeAsync<string>("ResetProgressBar", new object[] { });
             }
             catch (Exception e)
             {
@@ -345,7 +345,7 @@ namespace MerryYellow.BlazorDemo.Pages
             }
         }
 
-        public async Task OnThemeChangedAsync(UIChangeEventArgs e)
+        public async Task OnThemeChangedAsync(ChangeEventArgs e)
         {
             var theme = e.Value.ToString();
             await JS_SetThemeAsync(theme == "Light" ? "vs" : "vs-dark");

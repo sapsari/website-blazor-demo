@@ -110,17 +110,17 @@
 
         bool isInitializing;
         static int initCounter = 1;
-        protected override async Task OnAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnAfterRenderAsync();
+            await base.OnAfterRenderAsync(firstRender);
 
             if (IsInitialized || isInitializing)
                 return;
 
             isInitializing = true;
 
-        RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
-        RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
+            RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
+            RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
 
             DebugText = "initCount: " + initCounter++;
 
@@ -128,18 +128,35 @@
             //string text = "yo";
             try
             {
-                text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectRef.Create(this), text);
+                text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectReference.Create(this), text);
             }
             catch (Exception e)
             {
                 Log(e);
                 text = null;
             }
+            /*
+            DebugText = "asdasdads";
+            StateHasChanged();
+            
+            var source = await JS_GetSourceAsync();
+            DebugText = source;
+            StateHasChanged();
 
+            this.Source = source;
+            //StateHasChanged();
+            
+            GetClassList(source);
 
+            DebugText = _classList.ElementAtOrDefault(0);
+            StateHasChanged();
+            */
+
+            
             this.Source = await JS_GetSourceAsync();
             StatusText += "...";
             StateHasChanged();
+            
 
             //GetClassList();
             IsInitialized = true;
@@ -156,7 +173,7 @@
 
             //await OnContentChanged(); tc
 
-            //StateHasChanged();
+            //StateHasChanged();*/
         }
 
         [JSInvokable]

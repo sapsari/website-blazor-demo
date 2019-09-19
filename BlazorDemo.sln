@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorDemo", "BlazorDemo\Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoslynWeb", "RoslynWeb\RoslynWeb.csproj", "{453A286F-2BD5-404D-92B6-77E6CD890EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynWebExecutable", "RoslynWebExecutable\RoslynWebExecutable.csproj", "{62C1AB33-248A-4169-849C-FAE9D9EDBE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoslynWebExecutable", "RoslynWebExecutable\RoslynWebExecutable.csproj", "{62C1AB33-248A-4169-849C-FAE9D9EDBE43}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maker", "..\..\Pattern Maker\Source\Maker\Maker.csproj", "{980DE998-50B3-4C6F-B900-D865C73632B4}"
 EndProject
