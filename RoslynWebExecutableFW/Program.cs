@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MerryYellow.RoslynWeb
 {
-    public class Program
+    class Program
     {
         const string Source = @"
 using System;
@@ -24,31 +24,15 @@ namespace ConsoleApplication1
     }
 ";
 
-    public static void Main(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-            try
-            {
-
 
             var pl = Compiler.GetPatternList();
             var cl = Compiler.GetClassList(Source);
             var ns = Compiler.ApplyPattern(Source, pl.ElementAt(0), cl.ElementAt(0),
                 "Instance", "_instance", true, true);
 
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("EXCEPTION");
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException?.Message);
-                Console.WriteLine(e.StackTrace);
-                Console.WriteLine(e.ToString());
-                Console.WriteLine(e.HResult);
-                Console.WriteLine(e.Data.Count);
-
-            }
 
         }
     }

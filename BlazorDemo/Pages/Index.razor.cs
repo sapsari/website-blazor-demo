@@ -224,6 +224,7 @@ namespace MerryYellow.BlazorDemo.Pages
                 Log(e);
             }
 
+            //DebugText = "MOD SRC: " + modifiedSource + "_SRC:"+source;
 
             await JS_SetSourceAsync(modifiedSource);
 
@@ -318,13 +319,19 @@ namespace MerryYellow.BlazorDemo.Pages
                 //    StatusText += message;
                     StatusText = message;
 
+
+                DebugText = message;
+
             }
             StateHasChanged();
             if (type == LogType.Standard)
                 AutoResetLogAsync(); // do NOT await
         }
+
         public void Log(Exception e) => Log(e.ToString(), LogType.Error);
-        
+        //public void Log(Exception e) => Log(e.Message, LogType.Error);
+        //public void Log(Exception e) => Log(e.StackTrace, LogType.Error);
+
         public void ResetLog()
         {
             StatusType = LogType.Standard;

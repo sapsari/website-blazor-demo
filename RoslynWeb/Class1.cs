@@ -107,5 +107,11 @@ namespace MerryYellow.RoslynWeb
             var normalized = root.NormalizeWhitespace();
             return normalized.ToString();
         }
+
+        public static void Main()
+        {
+            var adhocWS = CreateWorkspace();
+            Console.WriteLine(nameof(adhocWS) + adhocWS?.ToString());
+        }
     }
 }
