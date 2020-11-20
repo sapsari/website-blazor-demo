@@ -119,8 +119,8 @@
 
             isInitializing = true;
 
-            RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
-            RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
+            MerryYellow.RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
+            MerryYellow.RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
 
             DebugText = "initCount: " + initCounter++;
 
