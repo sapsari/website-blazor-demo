@@ -1,0 +1,333 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height:100%;
+}
+
+.app {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height:100%;
+}
+
+.sk-cube-grid .sk-cube .sk-folding-cube {
+    background-color: white;
+}
+
+
+.top-row {
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.main {
+    flex: 1;
+    height:100%;
+}
+
+    .main .top-row {
+        background-color: #e6e6e6;
+        border-bottom: 1px solid #d6d5d5;
+    }
+
+.sidebar {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+    .sidebar .top-row {
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .sidebar .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .sidebar .oi {
+        width: 2rem;
+        font-size: 1.1rem;
+        vertical-align: text-top;
+        top: -2px;
+    }
+
+.nav-item {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item a {
+        color: #d7d7d7;
+        border-radius: 4px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+
+        .nav-item a.active {
+            background-color: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .nav-item a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+.content {
+    /*padding-top: 1.1rem;*/
+    /*padding-bottom: 1.1rem;*/
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+/*
+@media (max-width: 767.98px) {
+    .main .top-row {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    app {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .main .top-row {
+        position: sticky;
+        top: 0;
+    }
+
+    .main > div {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    .navbar-toggler {
+        display: none;
+    }
+
+    .sidebar .collapse {
+         /*Never collapse the sidebar for wide screens 
+        display: block;
+    }
+}
+*/
+
+select{
+    margin-right: 50px;
+}
+
+/* Style the list (remove margins and bullets, etc) */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+    /* Style the list items */
+    ul li {
+        border: 1px solid #ddd;
+        /*margin-top: -1px; /* Prevent double borders */
+        margin-bottom: -1px; /* Prevent double borders */
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+        position: relative;
+    }
+
+        /* Add a light grey background color on hover */
+        ul li:hover {
+            background-color: #eee;
+        }
+
+/* Style the close button (span) */
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    padding: 12px 16px;
+    transform: translate(0%, -50%);
+}
+
+.close:hover {
+    background: #bbb;
+}
+
+.header-image{
+    width: 1024px;
+    height: 96px;
+}
+
+.header {
+    background-image: url("./../background_small.png");
+    background-repeat: repeat;
+    /*background-position: 0 9px;*/
+    z-index:1;
+}
+
+.header-bg {
+    position: absolute;
+    /*z-index: -1;*/
+    top: 0;
+    height: 96px;
+    right: 0;
+    width: 100%;
+    background-image: url("./../background_small.png");
+    background-repeat: repeat;
+    background-position-x: -1.5rem !important;
+}
+
+
+.progressbar {
+    width: 100%;
+}
+
+    .progressbar .inner {
+        height: 3px;
+        animation: progressbar-countdown;
+        /* Placeholder, this will be updated using javascript */
+        animation-duration: 3s;
+        /* We stop in the end */
+        animation-iteration-count: 1;
+        /* Stay on pause when the animation is finished finished */
+        animation-fill-mode: forwards;
+        /* We start paused, we start the animation using javascript */
+        animation-play-state: running;
+        /* We want a linear animation, ease-out is standard */
+        animation-timing-function: linear;
+    }
+
+@keyframes progressbar-countdown {
+    0% {
+        width: 0%;
+        background: #FFC15A;
+    }
+
+    100% {
+        width: 100%;
+        background: #FFC15A;
+    }
+}
+
+
+.select_theme_div {
+    /*position:absolute;
+    right:12px;
+    top:12px;*/
+    float: right;
+    margin-left: 50px;
+}
+
+label{
+    margin-bottom:0;
+}
+
+.inversed {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.footer {
+    font-size: x-small;
+    text-align: center;
+    /*position: absolute;*/
+    bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    padding-top: 0.5rem;
+}
+
+.footer link{
+
+}
+
+.vs_get_link {
+    position: absolute;
+    right: 1.5rem !important;
+    top: 0px;
+}
+
+@media only screen and (max-width: 767.98px) {
+    .vs_get_link {
+        display: none;
+    }
+    .select_theme_div{
+        display: none;
+    }
+}
+
+input {
+    margin-right: 50px;
+}
+
+button {
+    margin-right: 50px;
+}
+
+[tooltip]:before {
+    /* needed - do not touch */
+    content: attr(tooltip);
+    position: absolute;
+    opacity: 0;
+    /* customizable */
+    transition: all 0.15s ease;
+    padding: 10px;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 2px 2px 1px silver;
+}
+
+[tooltip]:hover:before {
+    /* needed - do not touch */
+    opacity: 1;
+    /* customizable */
+    background: #FFC15A;
+    margin-top: -50px;
+    margin-left: 20px;
+}
+
+[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
+}

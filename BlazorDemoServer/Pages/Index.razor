@@ -1,0 +1,189 @@
+﻿@page "/"
+@inherits MerryYellow.BlazorDemoServer.Pages.PageModel
+<!--
+@inject IJSRuntime JsRuntime;
+@inject HttpClient Http
+    -->
+
+<!--
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+<p>Current JS: @jsString</p>
+    -->
+
+<div class="header">
+    <img src="header_small.png" class="header-image" />
+    <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank" class="vs_get_link">
+        <img border="0" alt="Get for VS" src="get.png" width="163" height="96"
+             onmouseover="this.src='get2.png';" onmouseout="this.src='get.png';">
+    </a>
+</div>
+
+<ul id="top_ul">
+    @if (IsDebug)
+    {
+        <li>Debug: @DebugText<span class="close">x</span></li>
+    }
+
+    <li>This demo has some restrictions since it runs on web assembly. Please <a href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">download the extension</a> for the best experience.<span class="close">x</span></li>
+    <!--
+    <button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
+    <button class="btn btn-primary" @onclick="@Run">Click me 222</button>
+        -->
+
+    <li>
+        <label for="select_pattern">Pattern </label>
+        <select id="select_pattern" @bind="@SelectedPattern">
+            @foreach (var p in this.GetPatternList())
+            {
+                <option value="@p">@p</option>
+            }
+        </select>
+
+        <label for="select_class">Class </label>
+        <select id="select_class" @onchange="@OnClassSelectionChanged">
+            @foreach (var c in GetClassList())
+            {
+                <option value="@c" selected="@(c==SelectedClass)">@c</option>
+            }
+        </select>
+
+        <button type="button" id="settings_button">Settings ↓↓</button>
+
+        <div class="select_theme_div">
+            <label for="select_theme">Theme </label>
+            <select id="select_theme" style="margin-right:0px" @onchange="@OnThemeChangedAsync">
+                <option value="Light">Light</option>
+                <option value="Dark">Dark</option>
+            </select>
+        </div>
+
+        <span>@StatusText</span>
+
+    </li>
+
+    <li id="settings_row" style="display:none">
+        <span tooltip="Name of the public accessor property, append '()' for method">
+            <label for="setting1_text">Accessor Name </label>
+            <input id="setting1_text" type="text" name="Setting1" @bind-Value="@Setting1" @bind-Value:event="oninput" />
+        </span>
+
+        <span tooltip="Name of the private instance field">
+            <label for="setting2_text">Instance Name </label>
+            <input id="setting2_text" type="text" name="Setting2" @bind-Value="@Setting2" @bind-Value:event="oninput" />
+        </span>
+
+        <span tooltip="Expression Body Definition '=>{;}'">
+            <label for="settingA_checkbox">Expr Body Def </label>
+            <input id="settingA_checkbox" type="checkbox" name="SettingA" @bind-Value="@SettingA" @bind-Value:event="oninput" checked />
+        </span>
+
+        <span tooltip="Lazy Initialization 'new Lazy<T>()'">
+            <label for="settingB_checkbox">Lazy Init </label>
+            <input id="settingB_checkbox" type="checkbox" name="SettingB" @bind-Value="@SettingB" @bind-Value:event="oninput" checked />
+        </span>
+
+        <span class="close">x</span>
+
+    </li>
+
+</ul>
+
+<!--
+<button class="btn btn-primary" @onclick="@ApplyPatternAsync">Apply Pattern</button>
+    -->
+
+<div id="progress_bar" class="progressbar">
+    <div id="progress_bar_inner" class="inner"></div>
+</div>
+
+<div id="monaco_container" style="width:100%;min-height:400px;flex:1;border:1px solid grey"></div>
+
+<span class="footer">
+    <span id="footer_inner">
+        <a class="link" href="https://marketplace.visualstudio.com/items?itemName=MerryYellow.patternmaker" target="_blank">VS Marketplace</a> | <a class="link" href="https://github.com/sapsari/website-blazor-demo" target="_blank">Website Source</a> | <a class="link" href="https://www.patreon.com/csharpshark" target="_blank">Patronage</a> | <a class="link" href="mailto:merryyellow@outlook.com" target="_blank">Bugs & Feedback</a>
+    </span>
+</span>
+
+@code {
+
+
+    bool isInitializing;
+    static int initCounter = 1;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (IsInitialized || isInitializing)
+            return;
+
+        isInitializing = true;
+
+        MerryYellow.RoslynWeb.Compiler.OnLogged -= Compiler_OnLogged;
+        MerryYellow.RoslynWeb.Compiler.OnLogged += Compiler_OnLogged;
+
+        DebugText = "initCount: " + initCounter++;
+
+        var text = await Http.GetStringAsync(NavigationManager.BaseUri + "/sample-data/SampleCode.txt");
+        //string text = "yo";
+        try
+        {
+            text = await JsRuntime.InvokeAsync<string>("CreateMonacoEditor", DotNetObjectReference.Create(this), text);
+        }
+        catch (Exception e)
+        {
+            Log(e);
+            text = null;
+        }
+        /*
+        DebugText = "asdasdads";
+        StateHasChanged();
+
+        var source = await JS_GetSourceAsync();
+        DebugText = source;
+        StateHasChanged();
+
+        this.Source = source;
+        //StateHasChanged();
+
+        GetClassList(source);
+
+        DebugText = _classList.ElementAtOrDefault(0);
+        StateHasChanged();
+        */
+
+
+        this.Source = await JS_GetSourceAsync();
+        StatusText += "...";
+        StateHasChanged();
+
+
+        //GetClassList();
+        IsInitialized = true;
+
+        //StatusText = "Ready!";
+        await ApplyPatternAsync();
+
+        StatusText = "";
+        StateHasChanged();
+
+        //StateHasChanged();
+
+
+
+        //await OnContentChanged(); tc
+
+        //StateHasChanged();*/
+    }
+
+    [JSInvokable]
+    public async Task<string> JS_OnContentChanged()
+    {
+        this.Source = await JS_GetSourceAsync();
+
+        this.OnSourceChangedAsync(); // do NOT await
+
+        return "occ";
+    }
+}

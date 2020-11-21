@@ -1,0 +1,163 @@
+﻿@page "/"
+@namespace BlazorDemoServer.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pattern Maker Online Demo</title>
+    <link rel="icon" href="icon.png">
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/spinkit.css" rel="stylesheet" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/min/vs/editor/editor.main.css">
+</head>
+<body>
+
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+    <!--
+    <script src="_framework/blazor.webassembly.js"></script>
+    -->
+    <script src="_framework/blazor.server.js"></script>
+
+    <script>var require = { paths: { 'vs': 'monaco-editor/min/vs' } };</script>
+    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script src="monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script src="monaco-editor/min/vs/editor/editor.main.js"></script>
+
+
+
+    <script>
+        window.CreateMonacoEditor = (instance, source) => {
+            var text1 = source;
+            var text2 = source;
+            var originalModel = monaco.editor.createModel(text1, "csharp");
+            var modifiedModel = monaco.editor.createModel(text2, "csharp");
+
+            var diffEditor = monaco.editor.createDiffEditor(document.getElementById("monaco_container"), {
+                // You can optionally disable the resizing
+                enableSplitViewResizing: false,
+                originalEditable: true,
+                scrollBeyondLastLine: false,
+                automaticLayout: true
+            });
+            diffEditor.setModel({
+                original: originalModel,
+                modified: modifiedModel
+            });
+            diffEditor.getModifiedEditor().updateOptions({ readOnly: true }); // make right-hand-side readonly
+
+            var originalEditor = diffEditor.getOriginalEditor();
+            originalEditor.onDidChangeModelContent(function (e) {
+                //var person = prompt("Please enter your name", "Harry Potter");
+                //dotnet.invokeMethodAsync('OnContentChanged', e.value);
+                window.monacoEditor = diffEditor; // totally needed
+                instance.invokeMethodAsync('JS_OnContentChanged');
+            });
+
+            window.monacoEditor = diffEditor;
+
+            var settings_button = document.getElementById("settings_button");
+
+            // closeable label stuff, not related to monaco
+            {
+                var closebtns = document.getElementsByClassName("close");
+                var i;
+
+                for (i = 0; i < closebtns.length; i++) {
+                    closebtns[i].addEventListener("click", function () {
+                        if (this.parentElement.id == "settings_row") { // to update button text
+                            settings_button.click();
+                        } else {
+                            this.parentElement.style.display = 'none';
+                        }
+                    });
+                }
+            }
+
+            // toggle options row, not related to monaco
+            {
+                settings_button.addEventListener("click", function () {
+                    var row = document.getElementById("settings_row");
+                    if (row.style.display == "none") {
+                        row.style.display = "block";
+                        this.innerHTML = "Settings ↑↑";
+                    } else {
+                        row.style.display = "none";
+                        this.innerHTML = "Settings ↓↓";
+                    }
+                });
+            }
+
+            return "created";
+        };
+
+        window.GetMonacoEditorContent = () => {
+            return window.monacoEditor.getOriginalEditor().getValue();
+        }
+
+        window.SetMonacoEditorContent = (modifiedSource) => {
+            window.monacoEditor.getModifiedEditor().setValue(modifiedSource);
+            return "modified";
+        }
+
+        window.SetMonacoEditorTheme = (theme) => {
+            monaco.editor.setTheme(theme);
+
+            var top_ul = document.getElementById("top_ul");
+            var content = document.getElementById("content");
+            var footer = document.getElementById("footer_inner");
+            if (top_ul.className != "inversed") {
+                top_ul.className = "inversed";
+                footer.className = "inversed";
+                content.style.backgroundColor = "black";
+                document.body.style.backgroundColor = "black";
+            }
+            else {
+                top_ul.className = "";
+                footer.className = "";
+                content.style.backgroundColor = "white";
+                document.body.style.backgroundColor = "white";
+            }
+
+            return "themefied";
+        }
+
+        window.ResetProgressBar = () => {
+            // reset progress bar animation
+            var progressbarinner = document.getElementById('progress_bar_inner');
+            progressbarinner.style.animationPlayState = 'running';
+            progressbarinner.style.animation = 'none';
+            progressbarinner.offsetHeight; /* trigger reflow */
+            progressbarinner.style.animation = null;
+        }
+
+
+    </script>
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-143606436-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-143606436-1');
+    </script>
+    -->
+
+</body>
+</html>
+
