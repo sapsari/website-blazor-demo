@@ -5,9 +5,11 @@
 
 ### [2nd demo](https://enchanter.netlify.com) (cloned from this, with IL Code view)
 
-This is a sample website that uses Blazor (client-side) to run Roslyn based projects on the browser with Monaco Editor.
+This is a sample website that uses cliend-side Blazor (WebAssembly) to run Roslyn based projects on the browser with Monaco Editor.
 
 Latest version uses .NET 5
+
+Also there is a duplicate project which uses server-side Blazor (BlazorServer), which is unloaded by default.
 
 **How to use:**
 
